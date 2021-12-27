@@ -27,7 +27,8 @@ export default class Screens extends Component {
 
           <Text style={styles.header}>welcome</Text>
           <Text style={styles.text}>
-            Good nutrition is an important part of leading a healthy lifestyle
+            just getting started? Let's take a look at some great features of
+            this app :)
           </Text>
         </View>
         {/* Second screen */}
@@ -41,7 +42,7 @@ export default class Screens extends Component {
           </Div>
           <Text style={styles.header}>Add Attendance</Text>
           <Text style={styles.text}>
-            Prayer is one of the most important things a Christian can do
+            create attendance with amezing ul design and save it to your device
           </Text>
         </View>
         {/* Third screen */}
@@ -54,7 +55,9 @@ export default class Screens extends Component {
             />
           </Div>
           <Text style={styles.header}>offline use</Text>
-          <Text style={styles.text}>we can this app as offline</Text>
+          <Text style={styles.text}>
+            This app dose not require internet service{" "}
+          </Text>
         </View>
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
           <Div w={"100%"} h={"50%"}>
@@ -64,8 +67,10 @@ export default class Screens extends Component {
               loop={false}
             />
           </Div>
-          <Text style={styles.header}>download data</Text>
-          <Text style={styles.text}>Where there is love there is life</Text>
+          <Text style={styles.header}>Download data</Text>
+          <Text style={styles.text}>
+            created attendance can download in your device in csv file format
+          </Text>
         </View>
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
           <Div w={"100%"} h={"50%"}>
@@ -75,8 +80,10 @@ export default class Screens extends Component {
               loop={false}
             />
           </Div>
-          <Text style={styles.header}>get start</Text>
-          <Text style={styles.text}>Where there is love there is life</Text>
+          <Text style={styles.header}>Get start</Text>
+          <Text style={styles.text}>
+            ready to explore great features of this app ..
+          </Text>
         </View>
       </Swiper>
     );

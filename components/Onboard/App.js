@@ -12,8 +12,6 @@ export default function ({ navigation }) {
       if (jsonValue) {
         navigation.replace("Home");
       }
-
-      alert(jsonValue);
     } catch (e) {
       alert(e);
     }

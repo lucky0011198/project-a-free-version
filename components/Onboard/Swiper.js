@@ -16,7 +16,6 @@ const storeData = async () => {
   try {
     const jsonValue = JSON.stringify(USER_1);
     await AsyncStorage.setItem("@App_state", jsonValue);
-    alert("data added");
   } catch (e) {
     alert(e);
   }

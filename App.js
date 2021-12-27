@@ -2,6 +2,11 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Button, Icon, Text, Div } from "react-native-magnus";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]);
+
+//Ignore all log notifications
+LogBox.ignoreAllLogs(true);
 
 //importing components
 import CreateScreen from "./components/Create";

@@ -137,12 +137,6 @@ export default function ({ route, navigation }) {
   useEffect(async () => {
     read();
     loadFonts();
-    // try {
-    //   const jsonValue = await AsyncStorage.getItem("@App_state");
-    //   alert(jsonValue);
-    // } catch (e) {
-    //   alert(e);
-    // }
   }, []);
 
   return (
@@ -162,14 +156,6 @@ export default function ({ route, navigation }) {
             {/* attendance header */}
             {/* attendance dashboard */}
 
-            {/*records.map((n) => (
-          <Div m="md">
-            <Div row>
-              <Div w={50} h={50} bg="red" mr="xl"></Div>
-              <Text>{n}</Text>
-            </Div>
-          </Div>
-        ))*/}
             <Div alignItems="center">
               {Adata.length != 0
                 ? multiDimensionalUnique(Adata).map((i, index) => (
