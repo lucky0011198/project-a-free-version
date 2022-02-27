@@ -386,12 +386,19 @@ export default function ({ route, navigation }) {
             </Div>
           </ScrollView>
         ) : (
-          <Div w={"100%"} h={"100%"}>
-            <LottieView
-              source={require("../assets/animations/13697-archive.json")}
-              autoPlay={true}
-              loop={false}
-            />
+          <Div w={"100%"} h={"100%"} justifyContent="center">
+            <Div h={"50%"}>
+              <LottieView
+                source={require("../assets/animations/13697-archive.json")}
+                autoPlay={true}
+                loop={false}
+              />
+            </Div>
+            <Div flex={1} justifyContent="center" alignItems="center">
+              <TouchableOpacity onPress={read} style={styles.button}>
+                <Text style={styles.buttonText}>Refresh</Text>
+              </TouchableOpacity>
+            </Div>
           </Div>
         )
       ) : null}
@@ -420,3 +427,23 @@ export default function ({ route, navigation }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#4fd1c5",
+    width: "60%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: "5%",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
+    fontSize: 16,
+  },
+  container: {
+    backgroundColor: "#fff",
+    padding: 8,
+  },
+});

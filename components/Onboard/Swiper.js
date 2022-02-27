@@ -255,7 +255,7 @@ export default class Swiper extends Component {
           <Button
             text="Start Now"
             onPress={() => {
-              navigation.navigate("Home");
+              navigation.replace("Home");
               storeData();
             }}
           />

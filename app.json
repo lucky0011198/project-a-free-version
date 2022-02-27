@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "project-a",
+    "name": "Attendance",
     "slug": "snack-91e1c010-589b-4d2d-81c0-7971e94f92f8",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.lucky.Attendance",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

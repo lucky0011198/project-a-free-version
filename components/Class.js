@@ -23,6 +23,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import {
   Div,
@@ -205,7 +206,10 @@ export default function ({ route, navigation }) {
         </Div>
       </Overlay>
       <ScrollView>
-        {data.length != 0 ? (
+
+      <FlatList
+        data={data}
+        renderItem={{data.length != 0 ? (
           data.map((i) => (
             <Div alignItems="center">
               <Div
@@ -386,7 +390,11 @@ export default function ({ route, navigation }) {
               source={require("../assets/animations/loading.gif")}
             /> */}
           </Div>
-        )}
+        )}}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}
+      />
+
       </ScrollView>
     </>
   );
