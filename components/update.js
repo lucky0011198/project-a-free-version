@@ -283,6 +283,7 @@ export default function ({ route, navigation }) {
                     borderColor: n.state ? "#4fd1c5" : "#a0aec0",
                     borderWidth: 1,
                     backgroundColor: n.state ? "#4fd1c5" : "transparent",
+
                   }}
                   onPress={() => {
                     const newlist = Data.map((newitem) => {

@@ -321,6 +321,7 @@ const styles = StyleSheet.create({
     marginRight: 3,
     marginTop: 3,
     marginBottom: 3,
+    display: "none",
   },
   // Active dot
   activeDot: {

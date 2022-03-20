@@ -24,6 +24,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import {
   Div,
@@ -158,7 +159,7 @@ export default function ({ route, navigation }) {
   useEffect(() => {
     getdata();
     loadFonts();
-    //console.log(JsonToCSV(data));
+    console.log(JsonToCSV(data));
   }, []);
 
   const Downloadfile = async () => {
@@ -197,71 +198,83 @@ export default function ({ route, navigation }) {
       {fontsLoaded ? (
         data.length != 0 ? (
           <ScrollView>
-            {data.map((i) => (
-              <Div
-                w={"97%"}
-                bg="gray200"
-                mt="lg"
-                justifyContent="space-between"
-                row
-              >
-                <Div ml="md" row>
+            <FlatList
+              data={data}
+              renderItem={({ item }) => {
+                // console.log(item.Roll);
+                return (
                   <Div
-                    w={60}
-                    h={60}
-                    bg="teal400"
-                    rounded="circle"
-                    justifyContent="center"
-                    alignItems="center"
+                    w={"97%"}
+                    bg="gray200"
+                    mt="lg"
+                    justifyContent="space-between"
+                    row
                   >
-                    <AntDesign name="user" size={24} color="white" />
-                  </Div>
-                  <Text
-                    fontFamily="RobotoMedium"
-                    fontWeight="bold"
-                    color="gray600"
-                    ml="lg"
-                    fontSize="xl"
-                  >
-                    {" "}
-                    Roll number{" "}
-                    <Text fontFamily="RobotoMedium" fontSize="xl">
-                      {i.Roll}
-                    </Text>
-                    {"\n"}
-                    <Text fontFamily="RobotoLight" mt="lg">
-                      <AntDesign name="user" size={15} color="black" /> Present:{" "}
-                      <Text
-                        color="gray600"
-                        fontFamily="RobotoLight"
-                        fontWeight="bold"
+                    <Div ml="md" row>
+                      <Div
+                        w={60}
+                        h={60}
+                        bg="teal400"
+                        rounded="circle"
+                        justifyContent="center"
+                        alignItems="center"
                       >
-                        {i.Present}
-                      </Text>{" "}
-                    </Text>{" "}
-                    <Text fontFamily="RobotoLight">
-                      <AntDesign name="deleteuser" size={16} color="black" />{" "}
-                      absent:{" "}
-                      <Text color="gray600" fontWeight="bold">
-                        {i.absent}
-                      </Text>{" "}
-                    </Text>{" "}
-                  </Text>
-                </Div>
-                <Div>
-                  <CircularProgress
-                    value={i.attendance.toFixed(0)}
-                    radius={30}
-                    inActiveStrokeColor={"#81e6d9"}
-                    inActiveStrokeOpacity={0.2}
-                    activeStrokeColor={"#38b2ac"}
-                    activeStrokeWidth={10}
-                    textColor={"#718096"}
-                    valueSuffix={"%"}
-                  />
-                </Div>
-              </Div>
-            ))}
+                        <AntDesign name="user" size={24} color="white" />
+                      </Div>
+                      <Text
+                        fontFamily="RobotoMedium"
+                        fontWeight="bold"
+                        color="gray600"
+                        ml="lg"
+                        fontSize="xl"
+                      >
+                        {" "}
+                        Roll number{" "}
+                        <Text fontFamily="RobotoMedium" fontSize="xl">
+                          {item.Roll}
+                        </Text>
+                        {"\n"}
+                        <Text fontFamily="RobotoLight" mt="lg">
+                          <AntDesign name="user" size={15} color="black" />{" "}
+                          Present:{" "}
+                          <Text
+                            color="gray600"
+                            fontFamily="RobotoLight"
+                            fontWeight="bold"
+                          >
+                            {item.Present}
+                          </Text>{" "}
+                        </Text>{" "}
+                        <Text fontFamily="RobotoLight">
+                          <AntDesign
+                            name="deleteuser"
+                            size={16}
+                            color="black"
+                          />{" "}
+                          absent:{" "}
+                          <Text color="gray600" fontWeight="bold">
+                            {item.absent}
+                          </Text>{" "}
+                        </Text>{" "}
+                      </Text>
+                    </Div>
+                    <Div>
+                      <CircularProgress
+                        value={item.attendance.toFixed(0)}
+                        radius={30}
+                        inActiveStrokeColor={"#81e6d9"}
+                        inActiveStrokeOpacity={0.2}
+                        activeStrokeColor={"#38b2ac"}
+                        activeStrokeWidth={10}
+                        textColor={"#718096"}
+                        valueSuffix={"%"}
+                      />
+                    </Div>
+                  </Div>
+                );
+              }}
+              keyExtractor={(item) => item.id}
+            />
           </ScrollView>
         ) : (
           <Div
@@ -352,8 +365,69 @@ export default function ({ route, navigation }) {
 }
 
 {
-  /* <Tab.Navigator>
-      <Tab.Screen name="Student" component={StudentScreen} data={route.params} />
-      <Tab.Screen name="Class" component={ClassScreen} />
-    </Tab.Navigator>*/
+  /*  {data.map((i) => (
+              <Div
+                w={"97%"}
+                bg="gray200"
+                mt="lg"
+                justifyContent="space-between"
+                row
+              >
+                <Div ml="md" row>
+                  <Div
+                    w={60}
+                    h={60}
+                    bg="teal400"
+                    rounded="circle"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <AntDesign name="user" size={24} color="white" />
+                  </Div>
+                  <Text
+                    fontFamily="RobotoMedium"
+                    fontWeight="bold"
+                    color="gray600"
+                    ml="lg"
+                    fontSize="xl"
+                  >
+                    {" "}
+                    Roll number{" "}
+                    <Text fontFamily="RobotoMedium" fontSize="xl">
+                      {i.Roll}
+                    </Text>
+                    {"\n"}
+                    <Text fontFamily="RobotoLight" mt="lg">
+                      <AntDesign name="user" size={15} color="black" /> Present:{" "}
+                      <Text
+                        color="gray600"
+                        fontFamily="RobotoLight"
+                        fontWeight="bold"
+                      >
+                        {i.Present}
+                      </Text>{" "}
+                    </Text>{" "}
+                    <Text fontFamily="RobotoLight">
+                      <AntDesign name="deleteuser" size={16} color="black" />{" "}
+                      absent:{" "}
+                      <Text color="gray600" fontWeight="bold">
+                        {i.absent}
+                      </Text>{" "}
+                    </Text>{" "}
+                  </Text>
+                </Div>
+                <Div>
+                  <CircularProgress
+                    value={i.attendance.toFixed(0)}
+                    radius={30}
+                    inActiveStrokeColor={"#81e6d9"}
+                    inActiveStrokeOpacity={0.2}
+                    activeStrokeColor={"#38b2ac"}
+                    activeStrokeWidth={10}
+                    textColor={"#718096"}
+                    valueSuffix={"%"}
+                  />
+                </Div>
+              </Div>
+            ))}*/
 }

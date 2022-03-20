@@ -17,7 +17,7 @@ export default class Screens extends Component {
         {/* First screen */}
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
           {/* <Icon name="ios-nutrition" {...iconStyles} /> */}
-          <Div w={"100%"} h={"50%"}>
+          <Div w={"100%"} h={"30%"}>
             <LottieView
               source={require("../../assets/animations/72342-welcome.json")}
               autoPlay={true}
@@ -33,7 +33,7 @@ export default class Screens extends Component {
         </View>
         {/* Second screen */}
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
-          <Div w={"100%"} h={"50%"}>
+          <Div w={"100%"} h={"30%"}>
             <LottieView
               source={require("../../assets/animations/42404-add-document.json")}
               autoPlay={true}
@@ -47,7 +47,7 @@ export default class Screens extends Component {
         </View>
         {/* Third screen */}
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
-          <Div w={"100%"} h={"50%"}>
+          <Div w={"100%"} h={"30%"}>
             <LottieView
               source={require("../../assets/animations/24120-offline.json")}
               autoPlay={true}
@@ -60,7 +60,7 @@ export default class Screens extends Component {
           </Text>
         </View>
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
-          <Div w={"100%"} h={"50%"}>
+          <Div w={"100%"} h={"30%"}>
             <LottieView
               source={require("../../assets/animations/25923-download-arrow.json")}
               autoPlay={true}
@@ -73,7 +73,7 @@ export default class Screens extends Component {
           </Text>
         </View>
         <View style={[styles.slide, { backgroundColor: "transperent" }]}>
-          <Div w={"100%"} h={"50%"}>
+          <Div w={"100%"} h={"30%"}>
             <LottieView
               source={require("../../assets/animations/start.json")}
               autoPlay={true}
