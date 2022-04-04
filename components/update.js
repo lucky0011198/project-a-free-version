@@ -52,7 +52,10 @@ import {
   Collapse,
   Dropdown,
   Toggle,
+  Snackbar,
+  SnackbarRef,
 } from "react-native-magnus";
+const snackbarRef = React.createRef();
 
 import {
   Feather,
@@ -69,12 +72,15 @@ import {
 
 export default function ({ route, navigation }) {
   const [Data, setdata] = useState(route.params.Data.Student);
+  const [Template, setTemplate] = useState("");
+  const [SData, setSData] = useState([]);
   const [on, toggle] = useState(false);
   const [State, setStete] = useState(false);
   const [date, setDate] = useState(new Date());
   const [time, settime] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [StudentData, setStudentData] = useState([]);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -95,7 +101,19 @@ export default function ({ route, navigation }) {
     showMode("time");
   };
 
-  useEffect(() => {
+  useEffect(async () => {
+    //console.log(route.params.Data.Template.std[0]);
+
+    const StudentData = await FileSystem.readDirectoryAsync(
+      FileSystem.documentDirectory
+    );
+    setSData(StudentData.filter((i) => i.split("-")[0] == "Templet"));
+    await FileSystem.readAsStringAsync(
+      FileSystem.documentDirectory + route.params.Data.Template
+    ).then((finalvalue) => {
+      setStudentData(JSON.parse(finalvalue));
+    });
+
     if (on) {
       setStete(true);
       const newlist = Data.map((newitem) => {
@@ -132,11 +150,10 @@ export default function ({ route, navigation }) {
       setdata(newlist);
     }
   }, [on]);
+
   const dropdownRef = React.createRef();
 
   let data = route.params.Data.Student;
-  console.log(route.params.id);
-  //let ClassAttendance = [];
 
   const UpdateData = async () => {
     let ClassData = {
@@ -165,8 +182,7 @@ export default function ({ route, navigation }) {
     route.params.Data.Attendance = [...route.params.Data.Attendance, ClassData];
 
     route.params.Data.Student = Data;
-
-    //console.log({ ...route.params.Attendance, ClassData });
+    // route.params.Data.Template = Template;
 
     let filename = FileSystem.documentDirectory + route.params.id;
     await FileSystem.writeAsStringAsync(
@@ -174,12 +190,18 @@ export default function ({ route, navigation }) {
       JSON.stringify(route.params.Data)
     ).then(() => {
       alert("done");
-      console.log(route.params.Data);
+      // console.log(route.params.Data);
     });
   };
 
   return (
     <View style={styles.container}>
+      <Snackbar
+        ref={snackbarRef}
+        bg="green700"
+        style={{ zIndex: 9999 }}
+        color="white"
+      ></Snackbar>
       <Text color="gray500" ml="3%">
         {" "}
         {""}staticstic data
@@ -271,7 +293,7 @@ export default function ({ route, navigation }) {
       <ScrollView>
         <Div justifyContent="center" flexWrap="wrap" row>
           {typeof route.params.Data.Student != "undefined"
-            ? Data.map((n) => (
+            ? Data.map((n, index) => (
                 <TouchableOpacity
                   style={{
                     width: 55,
@@ -283,9 +305,17 @@ export default function ({ route, navigation }) {
                     borderColor: n.state ? "#4fd1c5" : "#a0aec0",
                     borderWidth: 1,
                     backgroundColor: n.state ? "#4fd1c5" : "transparent",
-
                   }}
                   onPress={() => {
+                    // route.params.Data.Template.std[index]
+                    //   ? ToastAndroid.showWithGravity(
+                    //       `${route.params.Data.Template.std[index]}`,
+                    //       ToastAndroid.SHORT,
+                    //       ToastAndroid.BOTTOM
+                    //     )
+                    //   : "none";
+
+                    //alert(StudentData.std[index]);
                     const newlist = Data.map((newitem) => {
                       if (newitem.Roll == n.Roll) {
                         return {
@@ -388,7 +418,9 @@ export default function ({ route, navigation }) {
             rounded="circle"
             color="white"
             prefix={<AntDesign name="clouduploado" size={24} color="#38b2ac" />}
-            onPress={UpdateData}
+            onPress={() => {
+              UpdateData();
+            }}
           >
             <Text fontWeight="bold" color="#38b2ac">
               {" "}
@@ -406,6 +438,7 @@ export default function ({ route, navigation }) {
             prefix={<Feather name="users" size={20} color="#38b2ac" />}
             //onPress={UpdateData}
             onPress={() => {
+              //console.log(route.params);
               navigation.navigate("View", route.params);
             }}
           >

@@ -56,6 +56,12 @@ function App({ navigation, route }) {
         />
 
         <Stack.Screen
+          name="Templet"
+          component={TempletScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
           name="Create"
           component={CreateScreen}
           options={{ title: "Create Attendance" }}
@@ -70,11 +76,7 @@ function App({ navigation, route }) {
           component={ViewScreen}
           options={{ title: "Add Attendance" }}
         />
-        <Stack.Screen
-          name="Templet"
-          component={TempletScreen}
-          options={{ title: "Add Attendance" }}
-        />
+
         <Stack.Screen
           name="Student"
           component={StudentScreen}

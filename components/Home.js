@@ -72,8 +72,7 @@ import {
 import * as Font from "expo-font";
 
 export default function ({ route, navigation }) {
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [records, setrecords] = useState([]);
   const [Adata, Asetdata] = useState([]);
   const [fontsLoaded, setfontsLoaded] = useState(false);
@@ -105,9 +104,13 @@ export default function ({ route, navigation }) {
     let record = [];
     await FileSystem.readDirectoryAsync(FileSystem.documentDirectory).then(
       (data) => {
+        // console.log(data);
+
         if (data.filter((j) => j.split(".")[1] != "csv").length != 0) {
           setrecords(eval(JSON.stringify(data)));
-          eval(JSON.stringify(data)).map(async (i) => {
+          eval(
+            JSON.stringify(data.filter((i) => i.split("-")[0] != "Templet"))
+          ).map(async (i) => {
             await FileSystem.readAsStringAsync(
               FileSystem.documentDirectory + i
             ).then((Data) => {
@@ -168,6 +171,7 @@ export default function ({ route, navigation }) {
                       pb="md"
                       mb="lg"
                       rounded="md"
+                      key={index}
                     >
                       <Div justifyContent="space-between" row>
                         <Div m="lg" row>
@@ -379,6 +383,19 @@ export default function ({ route, navigation }) {
                             {i.time}
                           </Text>
                         </Button>
+                        <Button
+                          px="xl"
+                          py="sm"
+                          mt="lg"
+                          color="black"
+                          bg="#e2e8f0"
+                          alignItems="center"
+                          rounded="circle"
+                          shadow={2}
+                          onPress={() => {}}
+                        >
+                          <Text>Template</Text>
+                        </Button>
                       </Div>
                     </Div>
                   ))
@@ -418,6 +435,24 @@ export default function ({ route, navigation }) {
         ml="md"
         onPress={() => {
           navigation.navigate("Create");
+          //read();
+        }}
+      >
+        <Entypo name="plus" size={24} color="#2b6cb0" />
+      </Button>
+      <Button
+        bg="#bee3f8"
+        position="absolute"
+        top={"90%"}
+        left={"65%"}
+        h={50}
+        p={0}
+        shadow="lg"
+        w={50}
+        rounded="circle"
+        ml="md"
+        onPress={() => {
+          navigation.navigate("Templet");
           //read();
         }}
       >

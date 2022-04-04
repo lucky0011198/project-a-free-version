@@ -76,12 +76,14 @@ import {
 
 export default function ({ navigation }) {
   const [Type, setType] = useState("");
+  const [SData, setSData] = useState([]);
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [Data, setdata] = useState([]);
+  const [Template, setTemplate] = useState("");
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [Pin, setPin] = useState(false);
+
   const {
     register,
     setValue,
@@ -90,6 +92,11 @@ export default function ({ navigation }) {
     reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(async () => {
+    let temp = await AsyncStorage.getAllKeys();
+    setSData(temp);
+  }, []);
 
   const saveFile = async (data) => {
     let current_datetime = new Date();
@@ -124,7 +131,7 @@ export default function ({ navigation }) {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.RollFrom < data.RollTo) {
       data["Type"] = Type;
       data["Pin"] = Pin;
@@ -149,6 +156,7 @@ export default function ({ navigation }) {
       data["Attendance"] = [];
 
       saveFile(data);
+      //console.log(data);
     } else {
       alert("please select range properly");
     }
@@ -386,6 +394,40 @@ export default function ({ navigation }) {
                   rules={{ required: true }}
                 />
               </Div>
+
+              {/* <Div mt="xl">
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Radio.Group
+                      flexWrap="wrap"
+                      onChange={(value) => setTemplate(value)}
+                      row
+                    >
+                      {SData.map((item) => (
+                        <Radio flexWrap="wrap" value={item}>
+                          {({ checked }) => (
+                            <Div
+                              bg={checked ? "#4fd1c5" : "#e6fffa"}
+                              px="xl"
+                              py="md"
+                              mr="md"
+                              mt="md"
+                              rounded="circle"
+                            >
+                              <Text color={checked ? "white" : "gray800"}>
+                                {item}
+                              </Text>
+                            </Div>
+                          )}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
+                  )}
+                  name="Division"
+                  rules={{ required: true }}
+                />
+              </Div> */}
 
               <Div mt="5%" mb="lg" row>
                 <Fontisto name="date" size={18} color="black" />

@@ -205,7 +205,7 @@ export default function ({ route, navigation }) {
         </Div>
       </Overlay>
       <ScrollView>
-        {data.length != 0 ? (
+        {data.length != 0 && data.length ? (
           data.map((i) => (
             <Div alignItems="center">
               <Div
