@@ -147,7 +147,7 @@ export default function ({ route, navigation }) {
       {/* attendance header */}
 
       {fontsLoaded ? (
-        Adata.length != 0 ? (
+        [...new Set(Adata)].length != 0 ? (
           <ScrollView
             style={{
               backgroundColor: "#fff",
@@ -160,8 +160,8 @@ export default function ({ route, navigation }) {
             {/* attendance dashboard */}
 
             <Div alignItems="center">
-              {Adata.length != 0
-                ? multiDimensionalUnique(Adata).map((i, index) => (
+              {[...new Set(Adata)].length != 0
+                ? [...new Set(Adata)].map((i, index) => (
                     <Div
                       w={"98%"}
                       bg="#ffff"
@@ -384,17 +384,20 @@ export default function ({ route, navigation }) {
                           </Text>
                         </Button>
                         <Button
-                          px="xl"
+                          px="sm"
                           py="sm"
-                          mt="lg"
+                          mt="sm"
                           color="black"
-                          bg="#e2e8f0"
+                          bg="white"
                           alignItems="center"
                           rounded="circle"
                           shadow={2}
+                          prefix={
+                            <Icon name="wallet" mr="md" color="gray600" />
+                          }
                           onPress={() => {}}
                         >
-                          <Text>Template</Text>
+                          <Text>{JSON.parse(i.Template).name}</Text>
                         </Button>
                       </Div>
                     </Div>

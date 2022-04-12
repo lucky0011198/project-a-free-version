@@ -56,6 +56,7 @@ import {
   SnackbarRef,
 } from "react-native-magnus";
 const snackbarRef = React.createRef();
+const dropdownRef = React.createRef();
 
 import {
   Feather,
@@ -102,7 +103,7 @@ export default function ({ route, navigation }) {
   };
 
   useEffect(async () => {
-    //console.log(route.params.Data.Template.std[0]);
+    //console.log(JSON.parse(route.params.Data.Template).std);
 
     const StudentData = await FileSystem.readDirectoryAsync(
       FileSystem.documentDirectory
@@ -307,13 +308,15 @@ export default function ({ route, navigation }) {
                     backgroundColor: n.state ? "#4fd1c5" : "transparent",
                   }}
                   onPress={() => {
-                    // route.params.Data.Template.std[index]
-                    //   ? ToastAndroid.showWithGravity(
-                    //       `${route.params.Data.Template.std[index]}`,
-                    //       ToastAndroid.SHORT,
-                    //       ToastAndroid.BOTTOM
-                    //     )
-                    //   : "none";
+                    JSON.parse(route.params.Data.Template).std[index]
+                      ? ToastAndroid.showWithGravity(
+                          `${
+                            JSON.parse(route.params.Data.Template).std[index]
+                          }`,
+                          ToastAndroid.SHORT,
+                          ToastAndroid.BOTTOM
+                        )
+                      : "none";
 
                     //alert(StudentData.std[index]);
                     const newlist = Data.map((newitem) => {

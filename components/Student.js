@@ -146,6 +146,7 @@ export default function ({ route, navigation }) {
   useEffect(() => {
     getdata();
     loadFonts();
+    //console.log(JSON.parse(route.params.info.Data.Template).std);
   }, []);
 
   const Downloadfile = async () => {
@@ -186,7 +187,7 @@ export default function ({ route, navigation }) {
           <ScrollView>
             <FlatList
               data={data}
-              renderItem={({ item }) => {
+              renderItem={({ item }, index) => {
                 // console.log(item.Roll);
                 return (
                   <Div
@@ -198,14 +199,22 @@ export default function ({ route, navigation }) {
                   >
                     <Div ml="md" row>
                       <Div
-                        w={60}
-                        h={60}
+                        w={55}
+                        h={50}
                         bg="teal400"
-                        rounded="circle"
+                        rounded="xl"
                         justifyContent="center"
                         alignItems="center"
+                        flexDir="row"
                       >
-                        <AntDesign name="user" size={24} color="white" />
+                        <AntDesign name="user" size={20} color="white" />
+                        <Text
+                          fontFamily="RobotoMedium"
+                          color="white"
+                          fontSize="md"
+                        >
+                          {item.Roll}
+                        </Text>
                       </Div>
                       <Text
                         fontFamily="RobotoMedium"
@@ -215,10 +224,16 @@ export default function ({ route, navigation }) {
                         fontSize="xl"
                       >
                         {" "}
-                        Roll number{" "}
-                        <Text fontFamily="RobotoMedium" fontSize="xl">
+                        {JSON.parse(route.params.info.Data.Template).std[
+                          item.Roll
+                        ]
+                          ? JSON.parse(route.params.info.Data.Template).std[
+                              item.Roll
+                            ]
+                          : "student"}
+                        {/* <Text fontFamily="RobotoMedium" fontSize="xl">
                           {item.Roll}
-                        </Text>
+                        </Text> */}
                         {"\n"}
                         <Text fontFamily="RobotoLight" mt="lg">
                           <AntDesign name="user" size={15} color="black" />{" "}

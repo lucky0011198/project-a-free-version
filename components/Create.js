@@ -83,6 +83,7 @@ export default function ({ navigation }) {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [Pin, setPin] = useState(false);
+  const [ItemData, setItemData] = useState([]);
 
   const {
     register,
@@ -95,6 +96,13 @@ export default function ({ navigation }) {
 
   useEffect(async () => {
     let temp = await AsyncStorage.getAllKeys();
+
+    temp.map(async (i) => {
+      if (i != "@App_state") {
+        await getData(i);
+      }
+    });
+
     setSData(temp);
   }, []);
 
@@ -154,6 +162,7 @@ export default function ({ navigation }) {
       }
       data["Student"] = Student;
       data["Attendance"] = [];
+      data["Template"] = Template;
 
       saveFile(data);
       //console.log(data);
@@ -192,6 +201,17 @@ export default function ({ navigation }) {
   //   setdata(result);
   //   console.log(result);
   // };
+
+  const getData = async (data) => {
+    try {
+      const value = await AsyncStorage.getItem(`${data}`);
+      if (value !== null) {
+        setItemData((e) => [...e, JSON.parse(value)]);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: "#FF5236", flex: 0 }}>
@@ -395,7 +415,7 @@ export default function ({ navigation }) {
                 />
               </Div>
 
-              {/* <Div mt="xl">
+              <Div mt="xl">
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
@@ -404,30 +424,32 @@ export default function ({ navigation }) {
                       onChange={(value) => setTemplate(value)}
                       row
                     >
-                      {SData.map((item) => (
-                        <Radio flexWrap="wrap" value={item}>
-                          {({ checked }) => (
-                            <Div
-                              bg={checked ? "#4fd1c5" : "#e6fffa"}
-                              px="xl"
-                              py="md"
-                              mr="md"
-                              mt="md"
-                              rounded="circle"
-                            >
-                              <Text color={checked ? "white" : "gray800"}>
-                                {item}
-                              </Text>
-                            </Div>
-                          )}
-                        </Radio>
-                      ))}
+                      {[...new Set(ItemData)]
+                        ? [...new Set(ItemData)].map((item) => (
+                            <Radio flexWrap="wrap" value={item}>
+                              {({ checked }) => (
+                                <Div
+                                  bg={checked ? "#4fd1c5" : "#e6fffa"}
+                                  px="xl"
+                                  py="md"
+                                  mr="md"
+                                  mt="md"
+                                  rounded="circle"
+                                >
+                                  <Text color={checked ? "white" : "gray800"}>
+                                    {JSON.parse(item).name}
+                                  </Text>
+                                </Div>
+                              )}
+                            </Radio>
+                          ))
+                        : none}
                     </Radio.Group>
                   )}
                   name="Division"
                   rules={{ required: true }}
                 />
-              </Div> */}
+              </Div>
 
               <Div mt="5%" mb="lg" row>
                 <Fontisto name="date" size={18} color="black" />
