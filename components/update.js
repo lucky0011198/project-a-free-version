@@ -308,14 +308,16 @@ export default function ({ route, navigation }) {
                     backgroundColor: n.state ? "#4fd1c5" : "transparent",
                   }}
                   onPress={() => {
-                    JSON.parse(route.params.Data.Template).std[index]
-                      ? ToastAndroid.showWithGravity(
-                          `${
-                            JSON.parse(route.params.Data.Template).std[index]
-                          }`,
-                          ToastAndroid.SHORT,
-                          ToastAndroid.BOTTOM
-                        )
+                    route.params.Data.Template != ""
+                      ? JSON.parse(route.params.Data.Template).std[index]
+                        ? ToastAndroid.showWithGravity(
+                            `${
+                              JSON.parse(route.params.Data.Template).std[index]
+                            }`,
+                            ToastAndroid.SHORT,
+                            ToastAndroid.BOTTOM
+                          )
+                        : "none"
                       : "none";
 
                     //alert(StudentData.std[index]);

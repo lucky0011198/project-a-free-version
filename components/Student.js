@@ -146,7 +146,7 @@ export default function ({ route, navigation }) {
   useEffect(() => {
     getdata();
     loadFonts();
-    //console.log(JSON.parse(route.params.info.Data.Template).std);
+    console.log(route.params);
   }, []);
 
   const Downloadfile = async () => {
@@ -224,12 +224,14 @@ export default function ({ route, navigation }) {
                         fontSize="xl"
                       >
                         {" "}
-                        {JSON.parse(route.params.info.Data.Template).std[
-                          item.Roll
-                        ]
+                        {route.params.info.Data.Template != ""
                           ? JSON.parse(route.params.info.Data.Template).std[
-                              item.Roll
+                              item.Roll - 1
                             ]
+                            ? JSON.parse(route.params.info.Data.Template).std[
+                                item.Roll - 1
+                              ]
+                            : "student"
                           : "student"}
                         {/* <Text fontFamily="RobotoMedium" fontSize="xl">
                           {item.Roll}

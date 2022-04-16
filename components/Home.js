@@ -32,6 +32,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native";
+import * as MediaLibrary from "expo-media-library";
+import * as Permissions from "expo-permissions";
 
 import {
   Div,
@@ -76,6 +78,7 @@ export default function ({ route, navigation }) {
   const [records, setrecords] = useState([]);
   const [Adata, Asetdata] = useState([]);
   const [fontsLoaded, setfontsLoaded] = useState(false);
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   const loadFonts = async () => {
     await Font.loadAsync({
@@ -83,6 +86,34 @@ export default function ({ route, navigation }) {
       RobotoLight: require("../assets/fonts/Roboto/Roboto-Light.ttf"),
     });
     setfontsLoaded(true);
+  };
+
+  const Downloadfile = async (info, subject, Department, Division) => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === "granted") {
+      setOverlayVisible(true);
+      let filename = FileSystem.documentDirectory + `${subject}.csv`.toString();
+      await FileSystem.writeAsStringAsync(filename, info).then(() => {
+        // alert("done");
+        //alert(JSON.stringify(`${new Date().getTime()}.csv`));
+      });
+      const asset = await MediaLibrary.createAssetAsync(filename);
+      await MediaLibrary.createAlbumAsync("class360", asset, false).then(
+        (data) => {
+          setOverlayVisible(false);
+          Alert.alert("Downloaded", `File saved at ${asset.uri}`, [
+            {
+              /*
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              */
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+        }
+      );
+    }
   };
 
   function multiDimensionalUnique(arr) {
@@ -137,9 +168,95 @@ export default function ({ route, navigation }) {
     });
   };
 
+  const JsonToCSV = (itemData) => {
+    let JsonFields = [
+      "subject",
+      "Type",
+      "Department",
+      "Division",
+      "RollFrom",
+      "RollTo",
+      "Date",
+      "Time",
+    ];
+
+    let ClassAttendance = [
+      "Total",
+      "Present students",
+      "Absent students",
+      "class Attendance",
+    ];
+    let StudentAttendance = ["Roll", "Name", "Present", "absent", "attendance"];
+    let csvStr = JsonFields.join(",") + "\n";
+    csvStr +=
+      itemData.SubjectName +
+      "," +
+      itemData.Type +
+      "," +
+      itemData.department +
+      "," +
+      itemData.Division +
+      "," +
+      itemData.RollFrom +
+      "," +
+      itemData.RollTo +
+      "," +
+      itemData.date +
+      "," +
+      itemData.time +
+      "\n";
+
+    csvStr += "-----" + "class attendance data" + "------" + "\n";
+    csvStr += ClassAttendance.join(",") + "\n";
+    console.log(itemData.Attendance);
+    itemData.Attendance.length != 0
+      ? itemData.Attendance.forEach((element) => {
+          csvStr +=
+            element.Total +
+            "," +
+            element.Present +
+            "," +
+            element.Absent +
+            "," +
+            element.ClassAttendance +
+            "\n";
+        })
+      : (csvStr += "-----" + " no class attendance found" + "------" + "\n");
+    csvStr += "-----" + "Student attendance data" + "------" + "\n";
+    csvStr += StudentAttendance.join(",") + "\n";
+
+    let temp = "";
+    if (itemData.Template != "") {
+      temp = itemData.Template;
+    }
+
+    itemData.Student.length != 0
+      ? itemData.Student.forEach((element, index) => {
+          csvStr +=
+            element.Roll +
+            "," +
+            (temp != "" ? temp.std[index] : "null") +
+            "," +
+            element.Present +
+            "," +
+            element.absent +
+            "," +
+            element.attendance +
+            "\n";
+        })
+      : (csvStr += "-----" + " no class attendance found" + "------" + "\n");
+
+    if (itemData.length != 0) {
+      return csvStr;
+    } else {
+      return null;
+    }
+  };
+
   useEffect(async () => {
     read();
     loadFonts();
+    //console.log([...new Set(Adata)]);
   }, []);
 
   return (
@@ -325,6 +442,7 @@ export default function ({ route, navigation }) {
                           ml="md"
                           onPress={() => {
                             Delete(records[index]);
+                            read();
                           }}
                         >
                           <AntDesign name="delete" size={19} color="#f56565" />
@@ -383,6 +501,45 @@ export default function ({ route, navigation }) {
                             {i.time}
                           </Text>
                         </Button>
+
+                        {i.Attendance.length != 0 ? (
+                          <Button
+                            bg="#e2e8f0"
+                            px="md"
+                            py="sm"
+                            mt="sm"
+                            mr="md"
+                            color="black"
+                            alignItems="center"
+                            rounded="xl"
+                            shadow={2}
+                            prefix={
+                              <AntDesign
+                                name="download"
+                                size={15}
+                                color="black"
+                              />
+                            }
+                            onPress={() => {
+                              if (i.Attendance.length != 0) {
+                                Downloadfile(
+                                  JsonToCSV(i),
+                                  i.SubjectName,
+                                  i.department,
+                                  i.Division
+                                );
+                                //console.log(i);
+                              } else {
+                                alert("no attendance added");
+                              }
+                              // JsonToCSV(i);
+                            }}
+                          >
+                            <Text> Downlode </Text>
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
                         <Button
                           px="sm"
                           py="sm"
@@ -393,11 +550,19 @@ export default function ({ route, navigation }) {
                           rounded="circle"
                           shadow={2}
                           prefix={
-                            <Icon name="wallet" mr="md" color="gray600" />
+                            <Feather name="bookmark" size={15} color="black" />
                           }
-                          onPress={() => {}}
+                          onPress={() => {
+                            i.Template != ""
+                              ? JSON.stringify(JsonToCSV(i))
+                              : alert("no template");
+                          }}
                         >
-                          <Text>{JSON.parse(i.Template).name}</Text>
+                          <Text>
+                            {i.Template != ""
+                              ? JSON.parse(i.Template).name
+                              : " no template"}
+                          </Text>
                         </Button>
                       </Div>
                     </Div>
@@ -444,24 +609,35 @@ export default function ({ route, navigation }) {
         <Entypo name="plus" size={24} color="#2b6cb0" />
       </Button>
       <Button
-        bg="#bee3f8"
+        bg="gray400"
         position="absolute"
-        top={"90%"}
+        top={"90.5%"}
         left={"65%"}
-        h={50}
+        h={45}
         p={0}
         shadow="lg"
-        w={50}
-        rounded="circle"
+        w={45}
+        rounded="xl"
         ml="md"
         onPress={() => {
           navigation.navigate("Templet");
           //read();
         }}
       >
-        <Entypo name="plus" size={24} color="#2b6cb0" />
+        <Feather name="bookmark" size={24} color="black" />
       </Button>
       {/* create attendance ,.... */}
+      <Overlay visible={overlayVisible} p="xl">
+        <Div flexWrap="wrap" row>
+          <Image
+            style={{ width: 70, height: 70 }}
+            source={require("../assets/animations/download.gif")}
+          />
+          <Text ml="md" fontSize={"lg"} fontWeight="bold">
+            Downloading...
+          </Text>
+        </Div>
+      </Overlay>
     </>
   );
 }

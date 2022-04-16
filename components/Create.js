@@ -140,7 +140,7 @@ export default function ({ navigation }) {
   };
 
   const onSubmit = async (data) => {
-    if (data.RollFrom < data.RollTo) {
+    if (data.RollFrom < data.RollTo && data.RollTo < 200) {
       data["Type"] = Type;
       data["Pin"] = Pin;
       data["date"] = `${new Date(date).getDate()} / ${

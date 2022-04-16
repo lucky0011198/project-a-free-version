@@ -5,7 +5,6 @@ import { Button, Icon, Text, Div } from "react-native-magnus";
 import { LogBox } from "react-native";
 LogBox.ignoreLogs(["Warning: ..."]);
 
-//Ignore all log notifications
 LogBox.ignoreAllLogs(true);
 
 //importing components

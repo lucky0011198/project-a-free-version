@@ -6,6 +6,7 @@ import {
   StatusBar,
   SafeAreaView,
   FlatList,
+  RefreshControl,
   TouchableOpacity,
   TextInput,
   ScrollView,
@@ -26,37 +27,39 @@ import {
 } from "react-native-magnus";
 
 //icons......
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { cos } from "react-native-reanimated";
 
 function TemplateScreen({ route, navigation }) {
   const [data, setdata] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [ItemData, setItemData] = useState([]);
 
-  const getData = async (data) => {
-    try {
-      const value = await AsyncStorage.getItem(`${data}`);
-      if (value !== null) {
-        setItemData((e) => [...e, JSON.parse(value)]);
-      }
-    } catch (e) {
-      alert(e);
-    }
-  };
-
-  console.log(ItemData);
-
-  useEffect(async () => {
+  const getData = async () => {
+    setRefreshing(true);
     const data = await AsyncStorage.getAllKeys();
     let temp = [];
     data.map(async (i) => {
       if (i != "@App_state") {
-        await getData(i);
+        try {
+          const value = await AsyncStorage.getItem(`${i}`);
+          if (value !== null) {
+            setItemData((e) => [...e, JSON.parse(value)]);
+            setRefreshing(false);
+          }
+        } catch (e) {
+          alert(e);
+        }
       }
     });
 
-    console.log(temp);
     setdata(data);
+  };
+
+  console.log(ItemData);
+
+  useEffect(() => {
+    getData();
   }, []);
 
   console.log(data);
@@ -71,42 +74,84 @@ function TemplateScreen({ route, navigation }) {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Button
-        ml="md"
-        mb="lg"
-        px="xl"
-        py="lg"
-        bg="blue500"
-        rounded={10}
-        color="white"
-        fontWeight="bold"
-        shadow={2}
-        onPress={() => {
-          navigation.navigate("CreateRecord");
-        }}
-      >
-        + create Template
-      </Button>
+    <SafeAreaView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={getData} />
+      }
+    >
+      <Div row>
+        <Button
+          ml="md"
+          mb="lg"
+          px="xl"
+          py="lg"
+          bg="gray500"
+          rounded={10}
+          color="white"
+          fontWeight="bold"
+          shadow={2}
+          onPress={() => {
+            navigation.navigate("CreateRecord");
+          }}
+        >
+          + create Template
+        </Button>
+
+        <Button
+          ml="md"
+          mb="lg"
+          px="xl"
+          py="lg"
+          bg="blue500"
+          rounded={10}
+          color="white"
+          fontWeight="bold"
+          shadow={2}
+          onPress={async () => {
+            const data = await AsyncStorage.getAllKeys();
+            let temp = [];
+            data.map(async (i) => {
+              if (i != "@App_state") {
+                try {
+                  const value = await AsyncStorage.getItem(`${i}`);
+                  if (value !== null) {
+                    setItemData((e) => [...e, JSON.parse(value)]);
+                  }
+                } catch (e) {
+                  alert(e);
+                }
+              }
+            });
+
+            setdata(data);
+          }}
+        >
+          Refresh
+        </Button>
+      </Div>
       {[...new Set(ItemData)].length != 0
         ? [...new Set(ItemData)].map((i, index) => (
             <TouchableOpacity
               style={styles.item}
-              onPress={() => {
-                navigation.navigate("Details");
-              }}
+              onPress={() => {}}
               key={index}
             >
               <View style={styles.item}>
                 <View
                   style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                     width: 45,
                     height: 45,
                     backgroundColor: "white",
                     marginRight: 10,
                     borderRadius: 15,
                   }}
-                />
+                >
+                  <Feather name="bookmark" size={24} color="black" />
+                </View>
                 <Text style={styles.name}>
                   {JSON.parse(i).name}
                   <Text style={styles.subname}>
@@ -133,8 +178,10 @@ function TemplateScreen({ route, navigation }) {
                       AsyncStorage.removeItem(
                         data.filter((j) => j != "@App_state")[index]
                       );
+                      setItemData([...new Set(ItemData)].filter((j) => j != i));
                       getData();
                       alert("item deleted");
+                      navigation.navigate("Template");
                     } catch (e) {
                       alert(e);
                     }
@@ -161,7 +208,7 @@ function CreateRecordScreen({ navigation }) {
   const [branch, setbranch] = useState("");
   const [batch, setbatch] = useState("");
 
-  const [RollFrom, setRollFrom] = useState(0);
+  const [RollFrom, setRollFrom] = useState(1);
   const [RollTo, setRollTo] = useState(0);
   const [Roll, setRoll] = useState();
 
@@ -286,58 +333,8 @@ function CreateRecordScreen({ navigation }) {
           ml="lg"
           mb="lg"
         >
-          Student Strenth
+          Students
         </Text>
-        <Div row>
-          <Input
-            style={{
-              width: "95%",
-              padding: 2,
-              margin: 5,
-              color: "#191919",
-            }}
-            fontSize={16}
-            fontWeight={"600"}
-            keyboardType="numeric"
-            onChangeText={setRollFrom}
-            value={RollFrom}
-            placeholder=" Roll From"
-            borderColor="#ffff"
-          />
-          {/*  <Input
-          style={{
-            width: '46%',
-            padding: 2,
-            margin: 5,
-            color: '#191919',
-          }}
-          borderColor="#ffff"
-          onChangeText={setRollTo}
-          value={RollTo}
-          fontSize={16}
-          fontWeight={'600'}
-          placeholder=" Roll to"
-        />*/}
-        </Div>
-
-        <Button
-          ml="md"
-          mb="lg"
-          px="xl"
-          py="lg"
-          mt={"lg"}
-          bg="#ddd"
-          rounded={10}
-          color="#191919"
-          fontWeight="bold"
-          shadow={2}
-          onPress={async () => {
-            // alert(await AsyncStorage.getAllKeys());
-            getData();
-          }}
-        >
-          add +
-        </Button>
 
         {[...new Set(data)].map((i, index) => (
           <Div alignItems="center" justifyContent="center" row>

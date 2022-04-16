@@ -206,8 +206,8 @@ export default function ({ route, navigation }) {
       </Overlay>
       <ScrollView>
         {data.length != 0 && data.length ? (
-          data.map((i) => (
-            <Div alignItems="center">
+          data.map((i, index) => (
+            <Div alignItems="center" key={index}>
               <Div
                 w={"90%"}
                 bg="gray200"
@@ -252,34 +252,11 @@ export default function ({ route, navigation }) {
                     </Text>{" "}
                   </Text>
                 </Div>
-                <Div alignItems="center">
-                  <Button
-                    loading={isloading}
-                    bg="gray600"
-                    h={40}
-                    w={40}
-                    rounded="circle"
-                    onPress={() => {
-                      Downloade(i);
-                    }}
-                  >
-                    <Icon
-                      name="download"
-                      fontFamily="MaterialCommunityIcons"
-                      fontSize={24}
-                      color="white"
-                      h={60}
-                      w={60}
-                      rounded="md"
-                    />
-                  </Button>
-                  {/* <Text fontSize="xs">download</Text> */}
-                </Div>
               </Div>
               <Div>
                 <Text color="gray500">Absent</Text>
                 <Div w={"55%"} flexWrap="wrap" row>
-                  {i.AbsentData.map((n) => (
+                  {i.AbsentData.map((n, index) => (
                     <Div
                       w={25}
                       h={22}
@@ -288,6 +265,7 @@ export default function ({ route, navigation }) {
                       alignItems="center"
                       bg="gray600"
                       rounded="md"
+                      key={index}
                     >
                       <Text color="white" fontWeight="bold">
                         {" "}
